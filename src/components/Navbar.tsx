@@ -22,7 +22,7 @@ export default function Navbar() {
         <div className="flex justify-between h-20">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <div className="relative h-16 w-16 mr-2">
+              <div className="relative h-20 w-20 mr-2">
                 <Image
                   src="/logo/logo.png"
                   alt="Febeflo Logo"

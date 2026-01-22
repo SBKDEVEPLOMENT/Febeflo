@@ -8,12 +8,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center mb-6">
-               <div className="relative h-32 w-32 bg-white rounded-full p-2 shadow-lg flex-shrink-0 border-4 border-[#D4AF37]">
+               <div className="relative h-32 w-32 bg-white rounded-full shadow-lg flex-shrink-0 border-4 border-[#D4AF37] overflow-hidden">
                  <Image
                    src="/logo/logo.png"
                    alt="Febeflo Logo"
                    fill
-                   className="object-contain"
+                   className="object-cover"
                  />
                </div>
                <h3 className="text-3xl font-bold ml-6">Febeflo</h3>
