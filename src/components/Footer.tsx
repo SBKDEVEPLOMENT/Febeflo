@@ -3,12 +3,12 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-white">
+    <footer className="bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <div className="flex items-center mb-4">
-               <div className="relative h-12 w-12 mr-2 bg-white rounded-full p-1">
+            <div className="flex items-center mb-6">
+               <div className="relative h-32 w-32 bg-white rounded-full p-2 shadow-lg flex-shrink-0 border-4 border-[#D4AF37]">
                  <Image
                    src="/logo/logo.png"
                    alt="Febeflo Logo"
@@ -16,7 +16,7 @@ export default function Footer() {
                    className="object-contain"
                  />
                </div>
-               <h3 className="text-xl font-bold">Febeflo</h3>
+               <h3 className="text-3xl font-bold ml-6">Febeflo</h3>
             </div>
             <p className="mb-4">Tu tienda de ropa favorita para mujer y hombre. Estilo y calidad en un solo lugar.</p>
           </div>

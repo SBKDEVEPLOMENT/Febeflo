@@ -48,21 +48,21 @@ export default function AboutPage() {
           
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-primary">Nuestra Historia</h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-lg leading-relaxed text-justify">
               Febeflo nació con la misión de traer moda accesible, moderna y de calidad a la comunidad de Pudahuel. Ubicados en el corazón del Persa Teniente Cruz, nos hemos convertido en un punto de referencia para quienes buscan vestir bien sin gastar de más.
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-lg leading-relaxed text-justify">
               Nos especializamos en ropa para toda la familia: desde los más pequeños de la casa hasta las últimas tendencias para hombres y mujeres. Nuestro compromiso es ofrecerte siempre una atención personalizada y cercana.
             </p>
             
             <div className="grid grid-cols-2 gap-6 mt-8">
               <div className="p-4 bg-gray-50 rounded-lg border-l-4 border-primary">
                 <h3 className="font-bold text-lg text-gray-900">Misión</h3>
-                <p className="text-gray-600 mt-2">Vestir a la familia con estilo y calidad al mejor precio.</p>
+                <p className="text-gray-600 mt-2 text-justify">Encontrar la moda para cada persona, sin importar su edad, género o estilo, a precios accesibles.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg border-l-4 border-secondary">
                 <h3 className="font-bold text-lg text-gray-900">Visión</h3>
-                <p className="text-gray-600 mt-2">Ser la tienda de ropa preferida de Pudahuel y sus alrededores.</p>
+                <p className="text-gray-600 mt-2 text-justify">Ser la tienda de ropa preferida de todo Chile, reconocida por ofrecer productos de alta calidad, diseños actuales y una experiencia de compra confiable y accesible, posicionándonos como una marca referente en estilo, innovación y cercanía con nuestros clientes a nivel nacional.</p>
               </div>
             </div>
           </div>
