@@ -6,26 +6,26 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-10 pb-10">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-20 px-4 overflow-hidden">
-        {/* Logo Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-          <div className="relative w-[500px] h-[500px]">
-             <Image 
-               src="/logo/logo.png" 
-               alt="Background Logo" 
-               fill 
-               className="object-contain"
-               priority
-             />
-          </div>
+      <section className="relative w-full h-[500px] flex items-center justify-center text-white overflow-hidden">
+        {/* Background Image (Logo) */}
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/logo/logo.png" 
+            alt="Febeflo Background" 
+            fill 
+            className="object-cover opacity-90 blur-sm"
+            priority
+          />
+          {/* Overlay oscuro para legibilidad */}
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto flex flex-col items-center text-center z-10">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-md">Bienvenido a Febeflo</h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md">
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-xl border-black">Bienvenido a Febeflo</h1>
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md font-medium">
             La mejor moda para mujer, hombre y niños. Calidad y estilo en el corazón de Pudahuel.
           </p>
-          <Link href="/shop" className="bg-white text-primary font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors inline-flex items-center shadow-lg">
+          <Link href="/shop" className="bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-primary/90 transition-colors inline-flex items-center shadow-lg transform hover:scale-105 duration-200">
             Ver Catálogo <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </div>
