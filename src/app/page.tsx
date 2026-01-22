@@ -1,17 +1,31 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-10 pb-10">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-20 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Bienvenido a Febeflo</h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl">
+      <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-20 px-4 overflow-hidden">
+        {/* Logo Background */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+          <div className="relative w-[500px] h-[500px]">
+             <Image 
+               src="/logo/logo.png" 
+               alt="Background Logo" 
+               fill 
+               className="object-contain"
+               priority
+             />
+          </div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto flex flex-col items-center text-center z-10">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-md">Bienvenido a Febeflo</h1>
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md">
             La mejor moda para mujer, hombre y niños. Calidad y estilo en el corazón de Pudahuel.
           </p>
-          <Link href="/shop" className="bg-white text-primary font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors inline-flex items-center">
+          <Link href="/shop" className="bg-white text-primary font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition-colors inline-flex items-center shadow-lg">
             Ver Catálogo <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </div>
