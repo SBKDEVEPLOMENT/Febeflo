@@ -5,6 +5,7 @@ import { Filter, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 // Mock Data (Fallback)
 const MOCK_PRODUCTS = [
