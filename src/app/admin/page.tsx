@@ -224,7 +224,7 @@ export default function AdminDashboard() {
                 <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
                 <Tooltip 
-                  formatter={(value: number) => [formatCurrency(value), 'Ventas']}
+                  formatter={(value: any) => [formatCurrency(Number(value) || 0), 'Ventas']}
                   contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
                 <Line 

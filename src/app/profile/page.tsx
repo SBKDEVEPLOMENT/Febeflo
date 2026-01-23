@@ -56,6 +56,8 @@ export default function ProfilePage() {
 
       if (data) {
         setProfile({
+            id: data.id || user.id,
+            email: data.email || user.email || "",
             first_name: data.first_name || "",
             last_name: data.last_name || "",
             address: data.address || "",
@@ -117,7 +119,10 @@ export default function ProfilePage() {
 
         const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
         
-        setProfile(prev => ({ ...prev, avatar_url: data.publicUrl }));
+        setProfile(prev => {
+          if (!prev) return null;
+          return { ...prev, avatar_url: data.publicUrl };
+        });
         toast.success("Imagen subida. No olvides guardar los cambios.");
 
     } catch (error: any) {
