@@ -14,14 +14,14 @@ export async function POST(req: Request) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Usamos gemini-pro como modelo más estable
+    // Usamos gemini-1.5-flash como modelo más rápido y eficiente
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const chat = model.startChat({
       history: [
         {
           role: "user",
-          parts: [{ text: "Eres un asistente virtual amable y servicial para la tienda de ropa Febeflo. La tienda está ubicada en Persa Teniente Cruz - Pudahuel, 2° Bandejón - 3er Pasillo, Puestos: 784 - 786 - 797 - 799. Vendemos ropa de mujer, hombre y niños. Responde preguntas sobre ubicación, horarios (Sábados, Domingos y Festivos 09:00 - 18:00), y ayuda a los clientes a encontrar ropa. Sé conciso y usa emojis." }],
+          parts: [{ text: "Eres un asistente virtual amable y servicial para la tienda de ropa Febeflo. La tienda está ubicada en Persa Teniente Cruz - Pudahuel, 2° Bandejón - 3er Pasillo, Puestos: 784 - 786 - 797 - 799. Vendemos ropa de mujer y hombre . Responde preguntas sobre ubicación, horarios (Sábados, Domingos y Festivos 09:00 - 18:00), y ayuda a los clientes a encontrar ropa. También puedes proporcionar los siguientes correos de contacto: Agcatalans@febeflo.com (CEO), Ccandiae@febeflo.com (CEO), y Fcandiac@febeflo.com (Ejecutivo De Ventas). Sé conciso y usa emojis." }],
         },
         {
           role: "model",

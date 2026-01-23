@@ -1,236 +1,266 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  LineChart,
+  Line
+} from 'recharts';
+import { 
+  DollarSign, 
+  Users, 
+  ShoppingBag, 
+  TrendingUp, 
+  Activity,
+  Eye
+} from 'lucide-react';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image_url: string;
-  category: string;
-  sizes: string[];
+interface DashboardStats {
+  totalRevenue: number;
+  monthlyRevenue: number;
+  weeklyRevenue: number;
+  totalUsers: number;
+  totalOrders: number;
+  pageVisits: number;
 }
 
 export default function AdminDashboard() {
-  // Estado inicial vacío, se llenará con Supabase
-  const [products, setProducts] = useState<Product[]>([]);
+  const [stats, setStats] = useState<DashboardStats>({
+    totalRevenue: 0,
+    monthlyRevenue: 0,
+    weeklyRevenue: 0,
+    totalUsers: 0,
+    totalOrders: 0,
+    pageVisits: 0
+  });
+  const [salesData, setSalesData] = useState<any[]>([]);
+  const [recentLogs, setRecentLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (data) {
-        setProducts(data);
-      }
-    };
-    
-    fetchProducts();
+    fetchDashboardData();
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({
-    name: '',
-    price: 0,
-    category: 'hombre',
-    sizes: [],
-    image_url: ''
-  });
-
-  const SIZES = {
-    hombre: ["S", "M", "L", "XL", "XXL", "40", "42", "44", "46", "48", "50", "52", "54"],
-    mujer: ["S", "M", "L", "XL", "36", "38", "40", "42", "44", "46"]
-  };
-
-  const currentAvailableSizes = currentProduct.category === 'mujer' ? SIZES.mujer : SIZES.hombre;
-
-  const handleSizeToggle = (size: string) => {
-    const currentSizes = currentProduct.sizes || [];
-    if (currentSizes.includes(size)) {
-      setCurrentProduct({
-        ...currentProduct,
-        sizes: currentSizes.filter(s => s !== size)
-      });
-    } else {
-      setCurrentProduct({
-        ...currentProduct,
-        sizes: [...currentSizes, size]
-      });
-    }
-  };
-
-  const handleSaveProduct = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const fetchDashboardData = async () => {
     try {
-      const productData = {
-        name: currentProduct.name,
-        price: currentProduct.price,
-        category: currentProduct.category,
-        sizes: currentProduct.sizes,
-        image_url: currentProduct.image_url || "/placeholder-product.jpg"
-      };
+      setLoading(true);
+      
+      // Fetch Orders for Revenue Calculation
+      const { data: orders } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: true });
 
-      const { data, error } = await supabase
-        .from('products')
-        .insert([productData])
-        .select();
+      // Fetch Users Count
+      const { count: usersCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
 
-      if (error) throw error;
+      // Fetch Page Visits (Mocked for now if table empty)
+      const { data: visits } = await supabase
+        .from('page_analytics')
+        .select('*');
 
-      if (data) {
-        setProducts([data[0] as Product, ...products]);
-        setIsModalOpen(false);
-        setCurrentProduct({ name: '', price: 0, category: 'hombre', sizes: [], image_url: '' });
-        alert("Producto guardado exitosamente");
+      // Fetch Recent Logs
+      const { data: logs } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      // Calculate Stats
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+      let total = 0;
+      let monthly = 0;
+      let weekly = 0;
+      let previousMonth = 0;
+      const chartDataMap: {[key: string]: number} = {};
+
+      if (orders) {
+        orders.forEach(order => {
+          const amount = Number(order.total_amount);
+          const date = new Date(order.created_at);
+          
+          total += amount;
+
+          if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+            monthly += amount;
+          }
+          
+          if (date >= oneMonthAgo && date < new Date(now.getFullYear(), now.getMonth(), 1)) {
+             previousMonth += amount;
+          }
+
+          if (date >= oneWeekAgo) {
+            weekly += amount;
+          }
+
+          // Chart Data (Group by Day)
+          const dayKey = date.toLocaleDateString('es-CL', { day: 'numeric', month: 'short' });
+          chartDataMap[dayKey] = (chartDataMap[dayKey] || 0) + amount;
+        });
       }
-    } catch (error: any) {
-      console.error('Error:', error);
-      alert("Error al guardar el producto: " + error.message);
+      
+      const growth = previousMonth > 0 ? ((monthly - previousMonth) / previousMonth) * 100 : 0;
+
+      const chartData = Object.keys(chartDataMap).map(key => ({
+        name: key,
+        ventas: chartDataMap[key]
+      }));
+
+      // Calculate Total Visits
+      const totalVisits = visits?.reduce((acc, curr) => acc + (curr.visit_count || 0), 0) || 0;
+
+      setStats({
+        totalRevenue: total,
+        monthlyRevenue: monthly,
+        weeklyRevenue: weekly,
+        totalUsers: usersCount || 0,
+        totalOrders: orders?.length || 0,
+        pageVisits: totalVisits
+      });
+
+      setSalesData(chartData);
+      setRecentLogs(logs || []);
+
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
+  };
+
+  if (loading) {
+    return <div className="p-8 text-center">Cargando datos del panel...</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-white bg-primary hover:bg-teal-600 shadow-sm"
-          >
-            <Plus className="mr-2 h-5 w-5" />
-            Nuevo Producto
-          </button>
-        </div>
-      </header>
-      <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          
-          {/* Lista de Productos */}
-          <div className="bg-white shadow overflow-hidden sm:rounded-md">
-            <ul className="divide-y divide-gray-200">
-              {products.map((product) => (
-                <li key={product.id}>
-                  <div className="px-4 py-4 sm:px-6 flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className="h-12 w-12 bg-gray-200 rounded-md overflow-hidden mr-4">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-primary truncate">{product.name}</p>
-                        <p className="text-sm text-gray-500">${product.price.toLocaleString('es-CL')}</p>
-                        <div className="flex gap-1 mt-1">
-                          {product.sizes.map(size => (
-                            <span key={size} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                              {size}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="text-gray-400 hover:text-blue-500">
-                        <Edit2 className="h-5 w-5" />
-                      </button>
-                      <button className="text-gray-400 hover:text-red-500">
-                        <Trash2 className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">Panel de Control</h1>
 
-          {/* Modal de Creación/Edición */}
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-                <h2 className="text-xl font-bold mb-4">Agregar Nuevo Producto</h2>
-                <form onSubmit={handleSaveProduct} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Nombre del Producto</label>
-                    <input 
-                      type="text" 
-                      required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2 border"
-                      value={currentProduct.name}
-                      onChange={e => setCurrentProduct({...currentProduct, name: e.target.value})}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Precio (CLP)</label>
-                      <input 
-                        type="number" 
-                        required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2 border"
-                        value={currentProduct.price}
-                        onChange={e => setCurrentProduct({...currentProduct, price: Number(e.target.value)})}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Categoría</label>
-                      <select 
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2 border"
-                        value={currentProduct.category}
-                        onChange={e => setCurrentProduct({...currentProduct, category: e.target.value, sizes: []})}
-                      >
-                        <option value="hombre">Hombre</option>
-                        <option value="mujer">Mujer</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Tallas Disponibles ({currentProduct.category === 'mujer' ? 'Mujer' : 'Hombre'})</label>
-                    <div className="flex flex-wrap gap-2">
-                      {currentAvailableSizes.map(size => (
-                        <button
-                          key={size}
-                          type="button"
-                          onClick={() => handleSizeToggle(size)}
-                          className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-                            currentProduct.sizes?.includes(size)
-                              ? 'bg-primary text-white border-primary'
-                              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end space-x-3 pt-4 border-t">
-                    <button
-                      type="button"
-                      onClick={() => setIsModalOpen(false)}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-teal-600"
-                    >
-                      Guardar Producto
-                    </button>
-                  </div>
-                </form>
-              </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm">Ingresos Totales</p>
+              <h3 className="text-2xl font-bold mt-1 text-gray-900">{formatCurrency(stats.totalRevenue)}</h3>
             </div>
-          )}
-
+            <div className="bg-green-100 p-2 rounded-lg">
+              <DollarSign className="text-green-600" size={24} />
+            </div>
+          </div>
+          <p className="text-green-600 text-sm mt-4 flex items-center">
+            <TrendingUp size={16} className="mr-1" /> Real (Histórico)
+          </p>
         </div>
-      </main>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm">Ingresos Mensuales</p>
+              <h3 className="text-2xl font-bold mt-1 text-gray-900">{formatCurrency(stats.monthlyRevenue)}</h3>
+            </div>
+            <div className="bg-blue-100 p-2 rounded-lg">
+              <Activity className="text-blue-600" size={24} />
+            </div>
+          </div>
+          <p className="text-gray-500 text-sm mt-4">Este mes</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm">Usuarios Registrados</p>
+              <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.totalUsers}</h3>
+            </div>
+            <div className="bg-purple-100 p-2 rounded-lg">
+              <Users className="text-purple-600" size={24} />
+            </div>
+          </div>
+          <p className="text-purple-600 text-sm mt-4 flex items-center">
+            <Users size={16} className="mr-1" /> Total clientes
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-500 text-sm">Visitas Totales</p>
+              <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.pageVisits}</h3>
+            </div>
+            <div className="bg-orange-100 p-2 rounded-lg">
+              <Eye className="text-orange-600" size={24} />
+            </div>
+          </div>
+          <p className="text-gray-500 text-sm mt-4">Interacciones</p>
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
+          <h3 className="text-lg font-bold mb-6 text-gray-800">Resumen de Ventas</h3>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={salesData.length > 0 ? salesData : [{name: 'Sin datos', ventas: 0}]}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                <Tooltip 
+                  formatter={(value: number) => [formatCurrency(value), 'Ventas']}
+                  contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="ventas" 
+                  stroke="#0ea5e9" 
+                  strokeWidth={3} 
+                  dot={{ r: 4, fill: '#0ea5e9', strokeWidth: 2, stroke: '#fff' }}
+                  activeDot={{ r: 6, fill: '#0ea5e9' }} 
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-lg font-bold mb-6 text-gray-800">Actividad Reciente</h3>
+          <div className="space-y-4">
+            {recentLogs.length === 0 ? (
+              <p className="text-gray-500 text-sm">No hay actividad registrada.</p>
+            ) : (
+              recentLogs.map((log) => (
+                <div key={log.id} className="flex items-start pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                  <div className="bg-gray-100 p-2 rounded-full mr-3">
+                    <Activity size={16} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{log.action}</p>
+                    <p className="text-xs text-gray-500">{new Date(log.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

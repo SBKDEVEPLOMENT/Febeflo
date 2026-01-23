@@ -1,12 +1,15 @@
 "use client";
 
-import { ShoppingCart, Menu, User, X } from "lucide-react";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/cart";
+import AuthDropdown from "./AuthDropdown";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Navbar() {
+  const supabase = createClient();
   const [isOpen, setIsOpen] = useState(false);
   const itemsCount = useCartStore((state) => state.getItemsCount());
   // Hydration fix for zustand persist
@@ -42,9 +45,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/auth/login" className="p-2 text-gray-600 hover:text-primary transition-colors">
-              <User size={24} />
-            </Link>
+            <AuthDropdown />
             <Link href="/cart" className="p-2 text-gray-600 hover:text-primary transition-colors relative">
               <ShoppingCart size={24} />
               {mounted && itemsCount > 0 && (
@@ -77,9 +78,9 @@ export default function Navbar() {
             <Link href="/cart" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 flex items-center">
               <ShoppingCart size={20} className="mr-2" /> Carrito ({mounted ? itemsCount : 0})
             </Link>
-            <Link href="/auth/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 flex items-center">
-              <User size={20} className="mr-2" /> Iniciar Sesión
-            </Link>
+            <div className="px-3 py-2">
+               <AuthDropdown />
+            </div>
           </div>
         </div>
       )}

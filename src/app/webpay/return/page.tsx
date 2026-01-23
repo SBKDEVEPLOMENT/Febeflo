@@ -31,7 +31,7 @@ function WebpayReturnContent() {
         {status === 'success' && (
           <>
             <div className="flex justify-center mb-6">
-              <CheckCircle className="h-20 w-20 text-green-500" />
+              <CheckCircle className="h-20 w-20 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">¡Pago Exitoso!</h1>
             <p className="text-gray-600 mb-6">Tu compra ha sido procesada correctamente.</p>

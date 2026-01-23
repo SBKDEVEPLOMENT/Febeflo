@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Phone, Instagram, Facebook, Clock } from "lucide-react";
+import { MapPin, Phone, Instagram, Facebook, Clock, Mail } from "lucide-react";
 import { useState } from "react";
 
 export default function ContactPage() {
@@ -47,11 +47,16 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900">Ubicación</h3>
-                  <p className="text-gray-600 mt-1">
+                  <a 
+                    href="https://maps.app.goo.gl/F8nBGqmQ7K3xFdXH6" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-gray-600 mt-1 hover:text-primary transition-colors block"
+                  >
                     Persa Teniente Cruz - Pudahuel<br />
                     2° Bandejón - 3er Pasillo<br />
                     Puestos: 784 - 786 - 797 - 799
-                  </p>
+                  </a>
                 </div>
               </div>
 
@@ -62,6 +67,29 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-gray-900">Teléfono / WhatsApp</h3>
                   <p className="text-gray-600 mt-1">+56 9 3535 5621</p>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <div className="bg-white p-3 rounded-full shadow-sm mr-4">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900">Correos de Contacto</h3>
+                  <div className="mt-1 space-y-2">
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">CEO</p>
+                      <a href="mailto:Agcatalans@febeflo.com" className="text-gray-600 hover:text-primary transition-colors block">Agcatalans@febeflo.com</a>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">CEO</p>
+                      <a href="mailto:Ccandiae@febeflo.com" className="text-gray-600 hover:text-primary transition-colors block">Ccandiae@febeflo.com</a>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">Ejecutivo De Ventas</p>
+                      <a href="mailto:Fcandiac@febeflo.com" className="text-gray-600 hover:text-primary transition-colors block">Fcandiac@febeflo.com</a>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -151,7 +179,7 @@ export default function ContactPage() {
                 ></textarea>
               </div>
 
-              <button type="submit" className="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-teal-600 transition-colors font-bold text-lg shadow-md hover:shadow-lg">
+              <button type="submit" className="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-secondary transition-colors font-bold text-lg shadow-md hover:shadow-lg">
                 Enviar Mensaje por WhatsApp
               </button>
             </form>

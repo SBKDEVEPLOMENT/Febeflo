@@ -71,7 +71,7 @@ export default function CartPage() {
         </p>
         <Link 
           href="/shop" 
-          className="bg-primary text-white px-8 py-3 rounded-full hover:bg-teal-500 transition-colors font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          className="bg-primary text-white px-8 py-3 rounded-full hover:bg-secondary transition-colors font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           Volver a la Tienda
         </Link>
@@ -157,13 +157,13 @@ export default function CartPage() {
               <div className="mt-8 space-y-4">
                 <button 
                   onClick={handleCheckout}
-                  className="w-full bg-primary text-white py-3 rounded-md hover:bg-teal-500 transition-colors font-medium shadow-md hover:shadow-lg"
+                  className="w-full bg-primary text-white py-3 rounded-md hover:bg-secondary transition-colors font-medium shadow-md hover:shadow-lg"
                 >
                   Pagar con Webpay
                 </button>
                 <Link 
                   href="/shop"
-                  className="block w-full text-center text-primary hover:text-teal-600 font-medium text-sm"
+                  className="block w-full text-center text-primary hover:text-secondary font-medium text-sm"
                 >
                   Continuar Comprando
                 </Link>

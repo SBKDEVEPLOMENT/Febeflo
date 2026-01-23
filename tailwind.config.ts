@@ -10,11 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#2dd478ff", // Teal 400 - Verde Agua
+          DEFAULT: "#38bdf8", // Sky 400 - Celeste (Antes Verde Agua)
           foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "#38bdf8", // Sky 400 - Celeste
+          DEFAULT: "#0ea5e9", // Sky 500 - Celeste un poco más oscuro
           foreground: "#ffffff",
         },
         background: "var(--background)",

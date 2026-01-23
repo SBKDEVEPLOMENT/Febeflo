@@ -1,52 +1,63 @@
 "use client";
 
-import { ShoppingCart, Star, Truck, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Star, Truck, ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCartStore } from "@/store/cart";
 import { toast } from "sonner";
-
-// Mock Data (debería venir de una base de datos o API)
-const PRODUCTS = [
-  {
-    id: 1,
-    name: 'Vestido Floral Verano',
-    price: 24990,
-    category: 'mujer',
-    description: 'Vestido ligero y fresco con estampado floral, ideal para días calurosos. Fabricado con tela suave y transpirable.',
-    image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    id: 2,
-    name: 'Jeans Slim Fit',
-    price: 19990,
-    category: 'mujer',
-    description: 'Jeans de corte ajustado que realzan la figura. Tela elástica para mayor comodidad durante todo el día.',
-    image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    id: 3,
-    name: 'Camisa Casual Hombre',
-    price: 15990,
-    category: 'hombre',
-    description: 'Camisa versátil para ocasiones casuales o semi-formales. Algodón de alta calidad.',
-    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    id: 4,
-    name: 'Conjunto Niño',
-    price: 12990,
-    category: 'ninos',
-    description: 'Conjunto cómodo y duradero para niños activos. Incluye polera y pantalón.',
-    image: 'https://images.unsplash.com/photo-1519457431-44ccd64a579b?q=80&w=1000&auto=format&fit=crop',
-  },
-];
+import { useEffect, useState } from "react";
+import { getProductById } from "../actions";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const id = Number(params.id);
-  const product = PRODUCTS.find((p) => p.id === id);
   const addItem = useCartStore((state) => state.addItem);
+  
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const result = await getProductById(id);
+        
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        const data = result.data;
+
+        if (data) {
+          setProduct({
+            id: data.id,
+            name: data.name,
+            price: data.price,
+            category: data.category,
+            description: data.description || 'Sin descripción disponible.',
+            image: data.image_url || 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1000&auto=format&fit=crop',
+            sizes: data.sizes || []
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -60,6 +71,8 @@ export default function ProductDetailPage() {
   }
 
   const handleAddToCart = () => {
+    // Si el producto tiene tallas, verificar que se haya seleccionado una (lógica futura si se implementa selector de tallas aquí)
+    // Por ahora, añadimos al carrito con la estructura esperada
     addItem({ ...product, image_url: product.image });
     toast.success('Producto añadido al carrito');
   };

@@ -23,9 +23,9 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center px-4">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-xl border-black">Bienvenido a Febeflo</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl drop-shadow-md font-medium">
-            La mejor moda para mujer, hombre y niños. Calidad y estilo en el corazón de Pudahuel.
+            La mejor moda para mujer y hombre. Calidad y estilo en el corazón de Pudahuel.
           </p>
-          <Link href="/shop" className="bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-primary/90 transition-colors inline-flex items-center shadow-lg transform hover:scale-105 duration-200">
+          <Link href="/shop" className="bg-black text-white font-bold py-3 px-8 rounded-full hover:bg-black/90 transition-colors inline-flex items-center shadow-lg transform hover:scale-105 duration-200">
             Ver Catálogo <ArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </div>
@@ -34,38 +34,37 @@ export default function Home() {
       {/* Categories Section */}
       <section className="max-w-7xl mx-auto px-4 w-full">
         <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Nuestras Categorías</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Mujer */}
-          <div className="group relative h-80 rounded-lg overflow-hidden shadow-lg bg-gray-200">
-            <div className="absolute inset-0 bg-gray-400 group-hover:bg-gray-500 transition-colors flex items-center justify-center">
-              <span className="text-gray-100">Imagen Mujer</span>
+          <div className="group relative h-96 rounded-lg overflow-hidden shadow-lg bg-gray-200">
+            <div className="absolute inset-0 transition-colors flex items-center justify-center">
+              <Image 
+                src="/logo/logo_mujer.png" 
+                alt="Colección Mujer" 
+                fill 
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
             </div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-              <h3 className="text-3xl font-bold text-white">Mujer</h3>
+              <h3 className="text-4xl font-bold text-white drop-shadow-lg">Mujer</h3>
             </div>
             <Link href="/shop?category=mujer" className="absolute inset-0"><span className="sr-only">Ver Mujer</span></Link>
           </div>
 
           {/* Hombre */}
-          <div className="group relative h-80 rounded-lg overflow-hidden shadow-lg bg-gray-200">
-            <div className="absolute inset-0 bg-gray-400 group-hover:bg-gray-500 transition-colors flex items-center justify-center">
-              <span className="text-gray-100">Imagen Hombre</span>
+          <div className="group relative h-96 rounded-lg overflow-hidden shadow-lg bg-gray-200">
+            <div className="absolute inset-0 transition-colors flex items-center justify-center">
+              <Image 
+                src="/logo/logo_hombre.ong.png" 
+                alt="Colección Hombre" 
+                fill 
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
             </div>
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-              <h3 className="text-3xl font-bold text-white">Hombre</h3>
+              <h3 className="text-4xl font-bold text-white drop-shadow-lg">Hombre</h3>
             </div>
             <Link href="/shop?category=hombre" className="absolute inset-0"><span className="sr-only">Ver Hombre</span></Link>
-          </div>
-
-          {/* Niños */}
-          <div className="group relative h-80 rounded-lg overflow-hidden shadow-lg bg-gray-200">
-            <div className="absolute inset-0 bg-gray-400 group-hover:bg-gray-500 transition-colors flex items-center justify-center">
-              <span className="text-gray-100">Imagen Niños</span>
-            </div>
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-              <h3 className="text-3xl font-bold text-white">Niños</h3>
-            </div>
-            <Link href="/shop?category=ninos" className="absolute inset-0"><span className="sr-only">Ver Niños</span></Link>
           </div>
         </div>
       </section>
@@ -94,7 +93,16 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
               </div>
               <h3 className="text-xl font-bold mb-2">Ubicación Conveniente</h3>
-              <p className="text-gray-600">Encuéntranos fácilmente en Persa Teniente Cruz.</p>
+              <p className="text-gray-600">
+                <a 
+                  href="https://maps.app.goo.gl/F8nBGqmQ7K3xFdXH6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition-colors hover:underline"
+                >
+                  Encuéntranos fácilmente en Persa Teniente Cruz.
+                </a>
+              </p>
             </div>
           </div>
         </div>
