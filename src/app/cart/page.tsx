@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { STARKEN_BRANCHES, SHOP_LOCATION } from "@/constants/shipping";
 import Link from "next/link";
-import { Trash2, ShoppingBag, Plus, Minus, Loader2, Store, Truck, MapPin, Info } from "lucide-react";
+import { Trash2, ShoppingBag, Plus, Minus, Loader2, Store, Truck, MapPin, Info, Phone } from "lucide-react";
 import { useCartStore } from "@/store/cart";
+import { createClient } from "@/utils/supabase/client";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal } = useCartStore();
@@ -20,9 +21,22 @@ export default function CartPage() {
   const [selectedCommune, setSelectedCommune] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
+  const supabase = createClient();
 
   useEffect(() => {
     setMounted(true);
+    // Cargar teléfono del perfil si existe
+    const loadProfile = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            setIsVerified(!!user.phone_confirmed_at);
+            const { data } = await supabase.from('profiles').select('phone').eq('id', user.id).single();
+            if (data?.phone) setPhone(data.phone);
+        }
+    };
+    loadProfile();
   }, []);
 
   useEffect(() => {
@@ -57,6 +71,11 @@ export default function CartPage() {
   const handleCheckout = async () => {
     if (!termsAccepted) {
       toast.error("Debes aceptar los Términos y Condiciones para continuar");
+      return;
+    }
+
+    if (!isVerified) {
+      toast.error("Debes verificar tu número de teléfono para continuar");
       return;
     }
 
@@ -346,6 +365,42 @@ export default function CartPage() {
                 <div className="border-t border-gray-100 pt-4 flex justify-between text-lg font-bold text-gray-900">
                   <span>Total</span>
                   <span>${finalTotal.toLocaleString("es-CL")}</span>
+                </div>
+              </div>
+
+              {/* Contact Phone */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Teléfono de Contacto <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Phone size={18} className="text-gray-400" />
+                    </div>
+                    <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="+56 9 1234 5678"
+                        className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors ${
+                            isVerified ? 'border-green-500 focus:border-green-500' : 'border-gray-300 focus:border-primary'
+                        }`}
+                    />
+                    {isVerified && (
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                             <span className="text-green-500 text-sm font-bold">✓</span>
+                        </div>
+                    )}
+                </div>
+                <div className="flex justify-between items-start mt-1">
+                    <p className="text-xs text-gray-500">
+                        Necesario para coordinar la entrega o retiro.
+                    </p>
+                    {!isVerified && phone && (
+                        <Link href="/profile" className="text-xs text-yellow-600 hover:text-yellow-700 hover:underline font-medium flex items-center gap-1">
+                             ⚠ No verificado. Verificar aquí.
+                        </Link>
+                    )}
                 </div>
               </div>
 

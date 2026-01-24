@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 export default function AuthDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -338,6 +339,21 @@ export default function AuthDropdown() {
                     "Registrarse"
                   )}
                 </button>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2 bg-white text-gray-500">
+                      O {mode === "login" ? "continúa" : "regístrate"} con
+                    </span>
+                  </div>
+                </div>
+
+                <GoogleSignInButton 
+                  text={mode === "login" ? "Iniciar sesión con Google" : "Registrarse con Google"} 
+                />
 
                 <p className="text-xs text-center text-gray-500 mt-4">
                   {mode === "login"

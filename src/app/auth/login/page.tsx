@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { Suspense } from 'react';
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -153,6 +154,17 @@ function LoginForm() {
               {loading ? "Cargando..." : "Ingresar"}
             </button>
           </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">O continúa con</span>
+            </div>
+          </div>
+
+          <GoogleSignInButton text="Iniciar sesión con Google" />
         </form>
       </div>
     </div>

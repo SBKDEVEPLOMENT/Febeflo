@@ -56,7 +56,15 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-2">
+            <Link href="/cart" className="p-2 text-gray-600 hover:text-primary transition-colors relative mr-1">
+              <ShoppingCart size={24} />
+              {mounted && itemsCount > 0 && (
+                <span className="absolute top-0 right-0 bg-secondary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {itemsCount}
+                </span>
+              )}
+            </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
