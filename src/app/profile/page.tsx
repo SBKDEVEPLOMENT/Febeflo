@@ -157,6 +157,11 @@ export default function ProfilePage() {
   };
 
   const handleVerifyOtp = async () => {
+    if (!profile?.phone) {
+        toast.error("Error: No se encontró el número de teléfono.");
+        return;
+    }
+
     if (!otpCode || otpCode.length < 6) {
         toast.error("Ingresa el código de 6 dígitos.");
         return;
@@ -175,8 +180,8 @@ export default function ProfilePage() {
 
         // Also update the profile table to match
         const { error: profileError } = await supabase.from('profiles').upsert({
-            id: user.id,
             ...profile,
+            id: user.id, // Ensure ID is set correctly
             phone: formattedPhone, // Save the formatted verified phone
             updated_at: new Date().toISOString(),
         });
