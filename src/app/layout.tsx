@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Febeflo - Tienda de Ropa",
   description: "Ropa de mujer y hombre en Pudahuel.",
+  icons: {
+    icon: '/logo/logo.png',
+  },
 };
 
 export default function RootLayout({
