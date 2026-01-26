@@ -74,8 +74,8 @@ export default function CartPage() {
       return;
     }
 
-    if (!isVerified) {
-      toast.error("Debes verificar tu número de teléfono para continuar");
+    if (!phone) {
+      toast.error("Debes ingresar un número de teléfono de contacto");
       return;
     }
 
@@ -382,25 +382,13 @@ export default function CartPage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="+56 9 1234 5678"
-                        className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors ${
-                            isVerified ? 'border-green-500 focus:border-green-500' : 'border-gray-300 focus:border-primary'
-                        }`}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors focus:border-primary"
                     />
-                    {isVerified && (
-                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                             <span className="text-green-500 text-sm font-bold">✓</span>
-                        </div>
-                    )}
                 </div>
                 <div className="flex justify-between items-start mt-1">
                     <p className="text-xs text-gray-500">
                         Necesario para coordinar la entrega o retiro.
                     </p>
-                    {!isVerified && phone && (
-                        <Link href="/profile" className="text-xs text-yellow-600 hover:text-yellow-700 hover:underline font-medium flex items-center gap-1">
-                             ⚠ No verificado. Verificar aquí.
-                        </Link>
-                    )}
                 </div>
               </div>
 
