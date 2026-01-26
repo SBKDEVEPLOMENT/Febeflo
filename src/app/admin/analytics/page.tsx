@@ -67,10 +67,10 @@ export default function AnalyticsPage() {
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-  if (loading) return <div className="p-8">Cargando analíticas...</div>;
+  if (loading) return <div className="p-4 lg:p-8">Cargando analíticas...</div>;
 
   return (
-    <div className="p-8">
+    <div className="p-4 lg:p-8">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">Analíticas y Registros</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">

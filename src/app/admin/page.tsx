@@ -147,11 +147,11 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center">Cargando datos del panel...</div>;
+    return <div className="p-4 lg:p-8 text-center">Cargando datos del panel...</div>;
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 lg:p-8">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">Panel de Control</h1>
 
       {/* Stats Grid */}

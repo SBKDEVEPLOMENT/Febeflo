@@ -76,15 +76,15 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 lg:p-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Productos</h1>
           <p className="text-gray-500 mt-1">Gestiona tu catálogo, precios y stock</p>
         </div>
         <Link 
           href="/admin/products/create" 
-          className="bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors"
+          className="bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors w-full sm:w-auto justify-center"
         >
           <Plus size={20} />
           Nuevo Producto

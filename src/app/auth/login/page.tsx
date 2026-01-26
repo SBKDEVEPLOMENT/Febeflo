@@ -75,21 +75,23 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Iniciar Sesión
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            ¿No tienes cuenta?{" "}
-            <Link href="/auth/register" className="font-medium text-primary hover:text-secondary">
-              Regístrate aquí
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Iniciar Sesión
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          ¿No tienes cuenta?{" "}
+          <Link href="/auth/register" className="font-medium text-primary hover:text-secondary">
+            Regístrate aquí
+          </Link>
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <form className="space-y-6" onSubmit={handleLogin}>
+          <div className="space-y-4">
             <div>
               <label htmlFor="email-address" className="sr-only">Correo electrónico</label>
               <input
@@ -166,6 +168,7 @@ function LoginForm() {
 
           <GoogleSignInButton text="Iniciar sesión con Google" />
         </form>
+        </div>
       </div>
     </div>
   );

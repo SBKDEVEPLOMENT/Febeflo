@@ -105,11 +105,11 @@ export default function UsersPage() {
     );
   });
 
-  if (loading) return <div className="p-8">Cargando usuarios...</div>;
+  if (loading) return <div className="p-4 lg:p-8">Cargando usuarios...</div>;
 
   if (!currentUserEmail || !CEO_EMAILS.some(email => currentUserEmail.toLowerCase() === email.toLowerCase())) {
     return (
-      <div className="p-8 flex flex-col items-center justify-center h-[60vh] text-center">
+      <div className="p-4 lg:p-8 flex flex-col items-center justify-center h-[60vh] text-center">
         <AlertTriangle size={64} className="text-red-500 mb-4" />
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Acceso Restringido</h1>
         <p className="text-gray-600 max-w-md mb-4">
@@ -125,16 +125,16 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 lg:p-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold text-gray-800">Gestión de Usuarios y Permisos</h1>
         
-        <div className="relative">
+        <div className="relative w-full sm:w-auto">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           <input
             type="text"
             placeholder="Buscar por nombre o email..."
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary w-64 md:w-80"
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary w-full sm:w-64 md:w-80"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
